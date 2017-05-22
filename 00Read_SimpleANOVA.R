@@ -21,8 +21,21 @@ AGBio= read.csv("./data/AGbiomassPopB205162017.csv",header = T)
 AGBio_F = AGBio %>%
   mutate(Time = as.factor(YEAR))
 
+BlockDef = AGBio_F %>%
+  select (Block, Location)
+
+write.csv(BlockDef, file="./data/BlockList.csv")
+
+
 av = aov(AgBiomass_kg ~ Block + Time*Type, data=AGBio_F)
 anova(av)
+
+AGBio_F_EV = AGBio_F %>%
+  filter(Type != "CONT")
+
+av_EV = aov(AgBiomass_kg ~ Block + Time*Type, data=AGBio_F_EV)
+anova(av_EV)
+
 AGbiomas.rg0 <- ref.grid(av)
 lsMeansfxd = lsmeans(av, ~ Time*Type)
 lsmeans(av, ~ Type)
